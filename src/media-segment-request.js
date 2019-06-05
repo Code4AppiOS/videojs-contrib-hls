@@ -135,8 +135,16 @@ const handleErrors = (error, request) => {
  * @param {Function} finishProcessingFn - a callback to execute to continue processing
  *                                        this request
  */
+var s = null;
+var prefix = "";
 const handleKeyResponse = (segment, finishProcessingFn) => (error, request) => {
-  const response = request.response;
+  var resolvedUri = segment.resolvedUri.match("(.*\-)[0-9]+")[1]
+  if (prefix != resolvedUri) {
+    prefix = resolvedUri;
+    s = null;
+  }
+  const response = s || request.response;
+  s = response;
   const errorObj = handleErrors(error, request);
 
   if (errorObj) {
